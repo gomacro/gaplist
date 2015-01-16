@@ -27,16 +27,9 @@ func Nxt(i, j, k int) int {
 	if i >= 0 {
 		i++
 		if i >= j {
-			if k == 0 {
-				return 0
-			}
 			return -1
 		}
 		return i
 	}
-	i--
-	if -i > k {
-		return 0
-	}
-	return i
+	return i-1
 }

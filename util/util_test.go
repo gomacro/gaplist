@@ -20,7 +20,16 @@ func round(t *testing.T, j, k int) {
 		i = -1
 	}
 	if j+k != 0 {
+
+
+
 		for {
+
+
+			if i < -k {
+				break
+			}
+///////////
 			if i >= j {
 				t.Errorf("array [0] overrun i=%v", i)
 			}
@@ -57,13 +66,11 @@ func round(t *testing.T, j, k int) {
 			// NEXT
 
 			i = Nxt(i, j, k)
-			if i == 0 {
-				break
-			}
+
 		}
 	}
 	if iters != j+k {
-		t.Errorf("iters %v", iters)
+		t.Errorf("iters %v, need %v", iters, j+k)
 	}
 }
 
