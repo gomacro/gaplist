@@ -13,7 +13,7 @@ func Neg(i int) int {
 }
 
 // Off is ussed to obtain an offset within the half from interator
-// The parameter Off(j) is the len([1])
+// The parameter Off(k) is the len([1])
 func Off(i, k int) int {
 	if i < 0 {
 		return k + i
@@ -41,4 +41,10 @@ func Bgn(j int) int {
 		return -1
 	}
 	return 0
+}
+
+// Bgn is used to get the begin interator
+// The parameter Tst(k) is len([1])
+func Tst(i, k int) bool {
+	return i >= -k
 }
