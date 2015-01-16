@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-const dEBUG = false
+const dEBUG = true
 
 func round(t *testing.T, j, k int) {
 	max := -1
