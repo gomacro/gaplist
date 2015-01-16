@@ -23,13 +23,8 @@ func round(t *testing.T, j, k int) {
 
 
 
-		for {
+		for i >= -k {
 
-
-			if i < -k {
-				break
-			}
-///////////
 			if i >= j {
 				t.Errorf("array [0] overrun i=%v", i)
 			}
