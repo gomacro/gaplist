@@ -31,7 +31,7 @@ func Nxt(i, j, k int) int {
 		}
 		return i
 	}
-	return i-1
+	return i - 1
 }
 
 // Bgn is used to get the begin interator

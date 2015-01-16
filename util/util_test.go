@@ -9,52 +9,50 @@ import (
 	"testing"
 )
 
-const dEBUG = true
+const dEBUG = false
 
 func round(t *testing.T, j, k int) {
 	max := -1
 	min := 0
 	iters := 0
 
-	if j+k != 0 {
+	for i := Bgn(j); i >= -k; i = Nxt(i, j, k) {
 
-		for i := Bgn(j); i >= -k; i = Nxt(i, j, k) {
+		if i >= j {
+			t.Errorf("array [0] overrun i=%v", i)
+		}
+		if -i > k {
+			t.Errorf("array [1] overrun i=%v", i)
+		}
+		if i >= 0 && Off(i, k) != i {
+			t.Errorf("off [0]  i=%v, off=%v", i, Off(i, k))
+		}
+		if i < 0 && Off(i, k) != i+k {
+			t.Errorf("off [1]  i+k=%v, off=%v", i+k, Off(i, k))
+		}
 
-			if i >= j {
-				t.Errorf("array [0] overrun i=%v", i)
-			}
-			if -i > k {
-				t.Errorf("array [1] overrun i=%v", i)
-			}
-			if i >= 0 && Off(i, k) != i {
-				t.Errorf("off [0]  i=%v, off=%v", i, Off(i, k))
-			}
-			if i < 0 && Off(i, k) != i+k {
-				t.Errorf("off [1]  i+k=%v, off=%v", i+k, Off(i, k))
-			}
+		if dEBUG {
 
-			if dEBUG {
-
-				fmt.Println(i, max, min, Neg(i), Off(i, k))
-
-			}
-
-			iters++
-
-			if i > max {
-				max = i
-			} else if iters <= j {
-				t.Errorf("dwn %v", i)
-			}
-
-			if i < min {
-				min = i
-			} else if iters > j {
-				t.Errorf("up %v", i)
-			}
+			fmt.Println(i, max, min, Neg(i), Off(i, k))
 
 		}
+
+		iters++
+
+		if i > max {
+			max = i
+		} else if iters <= j {
+			t.Errorf("dwn %v", i)
+		}
+
+		if i < min {
+			min = i
+		} else if iters > j {
+			t.Errorf("up %v", i)
+		}
+
 	}
+
 	if iters != j+k {
 		t.Errorf("iters %v, need %v", iters, j+k)
 	}
