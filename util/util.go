@@ -33,3 +33,12 @@ func Nxt(i, j, k int) int {
 	}
 	return i-1
 }
+
+// Bgn is used to get the begin interator
+// The parameter Bgn(j) is len([0])
+func Bgn(j int) int {
+	if j == 0 {
+		return -1
+	}
+	return 0
+}

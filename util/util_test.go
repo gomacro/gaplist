@@ -15,15 +15,10 @@ func round(t *testing.T, j, k int) {
 	max := -1
 	min := 0
 	iters := 0
-	i := 0
-	if j == 0 {
-		i = -1
-	}
+
 	if j+k != 0 {
 
-
-
-		for ; i >= -k; i = Nxt(i, j, k) {
+		for i := Bgn(j); i >= -k; i = Nxt(i, j, k) {
 
 			if i >= j {
 				t.Errorf("array [0] overrun i=%v", i)
