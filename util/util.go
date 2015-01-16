@@ -11,20 +11,25 @@ func Neg(i int) int {
 	}
 	return 0
 }
+
 // Off is ussed to obtain an offset within the half from interator
 // The parameter Off(j) is the len([1])
-func Off(i, j int) int {
+func Off(i, k int) int {
 	if i < 0 {
-		return j - i
+		return k + i
 	}
 	return i
 }
+
 // Nxt is used to increment the interator
 // The parameter Nxt(j,k) are len([0]) len([1])
 func Nxt(i, j, k int) int {
 	if i >= 0 {
 		i++
 		if i >= j {
+			if k == 0 {
+				return 0
+			}
 			return -1
 		}
 		return i
