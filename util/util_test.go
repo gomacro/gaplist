@@ -2,7 +2,7 @@
 // Use of this source code is governed by a GPLv2-style
 // license that can be found in the LICENSE file.
 
-package top_test
+package util_test
 
 import (
 	"fmt"
