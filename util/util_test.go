@@ -2,102 +2,57 @@
 // Use of this source code is governed by a GPLv2-style
 // license that can be found in the LICENSE file.
 
-package util_test
+package util
 
 import (
-	"fmt"
-	"github.com/gomacro/sort/compare"
-	"github.com/gomacro/top/unsafe/top"
-
 	"testing"
+	"fmt"
 )
 
-////////////////////////////////////////////////////////////////////////////////
+func round(t *testing.T, j, k int) {
+	max := -1
+	min := 0
+	iters := 0
+	i := 0
+	for {
+		if i >= j {
+			t.Errorf("array [0] overrun i=%v", i)
+		}
+		if -i > k {
+			t.Errorf("array [1] overrun i=%v", i)
+		}
 
-func random(prng *[2]uint64) uint64 {
-	s1 := prng[0]
-	s0 := prng[1]
-	prng[0] = s0
-	s1 ^= s1 << 23 // a
-	prng[1] = (s1 ^ s0 ^ (s1 >> 17) ^ (s0 >> 26))
-	return prng[1] + s0 // b, c
-}
+		fmt.Println(i, max, min)
 
-func fillu(data []int64, seed *[2]uint64) {
-	for i := 0; i < len(data); i++ {
-		data[i] = int64(random(seed))
+		iters++
+
+		if i > max {
+			max = i
+		} else if iters <= j  {
+			t.Errorf("dwn %v", i)
+		}
+
+		if i < min {
+			min = i
+		} else if iters > j {
+			t.Errorf("up %v", i)
+		}
+
+		// NEXT
+
+		i = Nxt(i, j, k)
+		if i == 0 {
+			break
+		}
 	}
-}
-
-const debug = true
-const shortdatasize = 100
-const datasize = 10000000
-
-func BenchmarkMyTopLarge_Random(b *testing.B) {
-	b.StopTimer()
-
-	fmt.Printf("")
-
-	var seed = [2]uint64{0x13371337, 0x1337beef}
-	n := datasize
-	if testing.Short() {
-		n /= shortdatasize
-	}
-	data := make([]int64, n)
-	sample := make([]int64, 100)
-	fillu(data, &seed)
-
-
-	for n := 0; n < b.N; n++ {
-
-		b.StartTimer()
-
-		top.Top(compare.Int64, sample, data)
-
-		b.StopTimer()
-
-
-		fillu(data, &seed)
-
+	if iters != j + k {
+		t.Errorf("iters %v", iters)
 	}
 }
 
 func TestCustom0(t *testing.T) {
-	type Movie struct {
-		Title     string
-		BoxOffice int64
-	}
+//	round(t, 10, 10)
 
-	compar_asc := func(l, r *Movie) int {
-		return compare.Int64(&l.BoxOffice, &r.BoxOffice)
-	}
 
-	compar_desc := func(l, r *Movie) int {
-		return compare.Int64(&r.BoxOffice, &l.BoxOffice)
-	}
-
-	data := []Movie{
-		{"Iron Man", 5000000},
-		{"Independence Day", 1000000},
-		{"Fargo", 3000000},
-		{"Django Unchained", 9000000},
-		{"WALL-E", 4000000},
-	}
-
-	sample_asc := make([]Movie, 3)
-	sample_desc := make([]Movie, 3)
-
-	top.Top(compar_asc, sample_asc, data)
-	top.Top(compar_desc, sample_desc, data)
-
-	for _, movie := range sample_asc {
-		if movie == data[1] || movie == data[2] {
-			t.Errorf("found %v in asc", movie)
-		}
-	}
-	for _, movie := range sample_desc {
-		if movie == data[0] || movie == data[3] {
-			t.Errorf("found %v in desc", movie)
-		}
-	}
+	round(t, 0, 0)
 }
