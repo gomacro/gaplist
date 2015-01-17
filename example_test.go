@@ -5,10 +5,11 @@
 package list_test
 
 import (
-	"fmt"
 	. "example.com/repo.git/gaplist/util"
+	"fmt"
 	"testing"
 )
+
 /*
 func Append(list *[2][][]int, elem ... int) {
 	(*list)[1][0] = append((*list)[1][0], elem...)
@@ -20,7 +21,6 @@ func Prepend(list *[2][][]int, elem ... int) {
 	(*list)[0][0] = append(elem, (*list)[0][0]...)
 }
 */
-
 
 /*
 func TestCustom0(t *testing.T) {
@@ -100,53 +100,79 @@ func Collapse(dst *[]byte, src [2][][]byte) {
 	}
 }
 func Slice(dst *[2][][]byte, src [2][][]byte, i, p, j, q int) {
-	(*dst)[0] = src[0][i:]
-	(*dst)[0][0] = (*dst)[0][0][p:]
-	(*dst)[1] = src[1][:j-1+len(src[1])]
-	l := len((*dst)[1])-1
-	(*dst)[1][l] = (*dst)[1][l][:q]
+	if i < 0 {
+		(*dst)[0] = [][]byte{}
+		n := len(src[1])
+		(*dst)[1] = append((*dst)[1], src[1][j-1+n:i+n]...)
+		l := len((*dst)[1]) - 1
+		(*dst)[1][l] = (*dst)[1][l][:q]
+		(*dst)[1][0] = (*dst)[1][0][p:]
+	} else if i >= 0 && j < 0 {
+		(*dst)[0] = append((*dst)[0], src[0][i:]...)
+		(*dst)[0][0] = (*dst)[0][0][p:]
+		(*dst)[1] = append((*dst)[1], src[1][:j-1+len(src[1])]...)
+		l := len((*dst)[1]) - 1
+		(*dst)[1][l] = (*dst)[1][l][:q]
+	} else if i > j {
+		(*dst)[0] = [][]byte{}
+		n := len(src[1])
+		_ = n
+		fmt.Println(src[1])
+		//		(*dst)[1] = src[1][i-1+n:j-1+n]
+
+	}
 }
 
 func TestCustom0(t *testing.T) {
 	var list [2][][]byte
 
-	list[0] = [][]byte{{1,1,1,1,1,7,1,1,1,7,1,1,7,1,1}}
-	list[1] = [][]byte{{1,1,1,1,1,7,1,1,1,7,1,1,7,1,1}}
+	list[0] = [][]byte{{1, 1, 1, 1, 1, 7, 1, 1, 1, 7, 1, 1, 7, 1, 1}}
+	list[1] = [][]byte{{1, 1, 1, 1, 1, 7, 1, 1, 1, 7, 1, 1, 7, 1, 1}}
 
 	for i := Bgn(len(list[0])); Tst(i, len(list[1])); i = Nxt(i, len(list[0]), len(list[1])) {
 
 	}
 
-
-//	fmt.Println(list)
-	list = AppendS(list, []byte{1,3,3,7})
+	//	fmt.Println(list)
+	list = AppendS(list, []byte{1, 3, 3, 7})
 	list = Append(list, 2, 4, 4, 8)
 
-
-//	fmt.Println(list)
+	//	fmt.Println(list)
 
 	var lst []byte
 
 	Collapse(&lst, list)
 
-//	fmt.Println(lst)
+	//	fmt.Println(lst)
 
 	From(&list, lst)
-//	fmt.Println(list)
+	//	fmt.Println(list)
 }
 
 func TestSlice0(t *testing.T) {
-	var list [2][][]byte
-	list[0] = [][]byte{{1,2,3},{4,5,6,7,8},{9,10,11},{12,13},{14,15}}
-	list[1] = [][]byte{{16,17},{18,19},{20,21,22},{23,24},{25,26,27}}
+	var list, list2, list3, list4 [2][][]byte
+
+	list[0] = [][]byte{{1, 2, 3}, {4, 5, 6, 7, 8}, {9, 10, 11}, {12, 13}, {14, 15}}
+	list[1] = [][]byte{{16, 17}, {18, 19}, {20, 21, 22}, {23, 24}, {25, 26, 27}}
 	fmt.Println(list)
 
-	var list2 [2][][]byte
+	fmt.Println("----------------")
 
 	Slice(&list2, list, 1, 3, -2, 1)
-
 	fmt.Println(list2)
+	fmt.Println(list)
 
+	fmt.Println("----------------")
+
+	Slice(&list3, list, 1, 3, 3, 1)
+	fmt.Println(list3)
+	fmt.Println(list)
+
+	fmt.Println("----------------")
+
+	Slice(&list4, list, -2, 1, -3, 2)
+	fmt.Println(list4)
+	fmt.Println(list)
 }
 
 /*
