@@ -101,25 +101,24 @@ func Collapse(dst *[]byte, src [2][][]byte) {
 }
 func Slice(dst *[2][][]byte, src [2][][]byte, i, p, j, q int) {
 	if i < 0 {
-		(*dst)[0] = [][]byte{}
 		n := len(src[1])
 		(*dst)[1] = append((*dst)[1], src[1][j-1+n:i+n]...)
 		l := len((*dst)[1]) - 1
+		(*dst)[0] = [][]byte{}
 		(*dst)[1][l] = (*dst)[1][l][:q]
 		(*dst)[1][0] = (*dst)[1][0][p:]
-	} else if i >= 0 && j < 0 {
+	} else if j >= 0 {
+		(*dst)[0] = append((*dst)[0], src[0][i:j+1]...)
+		(*dst)[1] = [][]byte{}
+		l := len((*dst)[0]) - 1
+		(*dst)[0][l] = (*dst)[0][l][:q]
+		(*dst)[0][0] = (*dst)[0][0][p:]
+	} else {
 		(*dst)[0] = append((*dst)[0], src[0][i:]...)
 		(*dst)[0][0] = (*dst)[0][0][p:]
 		(*dst)[1] = append((*dst)[1], src[1][:j-1+len(src[1])]...)
 		l := len((*dst)[1]) - 1
 		(*dst)[1][l] = (*dst)[1][l][:q]
-	} else if i > j {
-		(*dst)[0] = [][]byte{}
-		n := len(src[1])
-		_ = n
-		fmt.Println(src[1])
-		//		(*dst)[1] = src[1][i-1+n:j-1+n]
-
 	}
 }
 
