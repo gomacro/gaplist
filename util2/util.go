@@ -47,3 +47,9 @@ func Bgn(j int) int {
 func I(i, k int) bool {
 	return i < k
 }
+
+// Brk is used to break the list loop
+// The parameter I(k) is len([1])
+func Brk(k int) int {
+	return k
+}
