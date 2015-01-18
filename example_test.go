@@ -266,7 +266,7 @@ func TestFib0(t *testing.T) {
 
 			ttl--
 			if ttl < 0 {
-				li = Break(list)
+				li = Break()
 				break
 			}
 		}

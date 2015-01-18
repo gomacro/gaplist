@@ -20,6 +20,6 @@ func Off(i int) int {
 func Pos(i int) int {
 	return u.Pos(i)
 }
-func Break(list interface{}) int {
-	return u.Brk(reflect.ValueOf(list).Index(1).Len())
+func Break() int {
+	return u.Brk
 }
