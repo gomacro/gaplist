@@ -5,7 +5,7 @@
 package list_test
 
 import (
-	. "example.com/repo.git/gaplist/util2"
+	. "example.com/repo.git/gaplist/loop"
 	"fmt"
 	"testing"
 )
@@ -206,7 +206,7 @@ func TestCustom0(t *testing.T) {
 	list[0] = [][]byte{{1, 1, 1, 1, 1, 7, 1, 1, 1, 7, 1, 1, 7, 1, 1}}
 	list[1] = [][]byte{{1, 1, 1, 1, 1, 7, 1, 1, 1, 7, 1, 1, 7, 1, 1}}
 
-	for i := Bgn(len(list[0])); Tst(i, len(list[1])); i = Nxt(i, len(list[0])) {
+	for i := Begin(list); In(i, list); i = Next(i, list) {
 
 	}
 
