@@ -42,8 +42,8 @@ func Bgn(j int) int {
 	return -1
 }
 
-// Bgn is used to get the begin interator
-// The parameter Tst(k) is len([1])
-func Tst(i, k int) bool {
+// I is used to test the interator is in the list
+// The parameter I(k) is len([1])
+func I(i, k int) bool {
 	return i < k
 }
