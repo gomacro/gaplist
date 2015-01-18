@@ -179,6 +179,27 @@ func TestSlice0(t *testing.T) {
 
 */
 
+// U64-specific
+
+type U64 struct{}
+
+func (U64) Append(src [2][][]uint64, a ...uint64) [2][][]uint64 {
+	return U64{}.AppendS(src, a)
+}
+func (U64) AppendS(src [2][][]uint64, a []uint64) (dst [2][][]uint64) {
+	dst = src
+	dst[1] = append(dst[1], a)
+	return dst
+}
+func (U64) Collapse(dst *[]uint64, src [2][][]uint64) {
+	for _, o := range src {
+		for _, p := range o {
+			*dst = append(*dst, p...)
+		}
+	}
+}
+
+// byte specific
 func Append(src [2][][]byte, a ...byte) [2][][]byte {
 	return AppendS(src, a)
 }
@@ -206,10 +227,6 @@ func TestCustom0(t *testing.T) {
 	list[0] = [][]byte{{1, 1, 1, 1, 1, 7, 1, 1, 1, 7, 1, 1, 7, 1, 1}}
 	list[1] = [][]byte{{1, 1, 1, 1, 1, 7, 1, 1, 1, 7, 1, 1, 7, 1, 1}}
 
-	for i := Begin(list); In(i, list); i = Next(i, list) {
-
-	}
-
 	fmt.Println(list)
 	list = AppendS(list, []byte{1, 3, 3, 7})
 	list = Append(list, 2, 4, 4, 8)
@@ -224,6 +241,42 @@ func TestCustom0(t *testing.T) {
 
 	From(&list, lst)
 	fmt.Println(list)
+}
+func chsum(str string) (o uint32) {
+	slice := []byte(str)
+	for c := range slice {
+		o += uint32(c)
+		o *= 31
+	}
+	return o
+}
+
+func TestFib0(t *testing.T) {
+	var list [2][][]uint64
+	list = [2][][]uint64{{{1}}, {}}
+
+	ttl := 256
+
+	var last uint64
+
+	for li := Begin(list); In(li, list); li = Next(li, list) {
+		for _, n := range list[Pos(li)][Off(li)] {
+			list = U64{}.Append(list, last+n)
+			last = n
+
+			ttl--
+			if ttl < 0 {
+				li = Break(list)
+				break
+			}
+		}
+	}
+	var lst []uint64
+	U64{}.Collapse(&lst, list)
+
+	if 4147915120 != chsum(fmt.Sprintln(lst)) {
+		t.Fatalf("Bad list sum: %v", lst)
+	}
 }
 
 /*
