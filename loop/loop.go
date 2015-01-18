@@ -1,19 +1,25 @@
 package loop
 
 import (
-	. "example.com/repo.git/gaplist/util2"
+	u "example.com/repo.git/gaplist/util2"
 	"reflect"
 )
 
 func Begin(list interface{}) int {
-	j := reflect.ValueOf(list).Index(0).Len()
-	return Bgn(j)
+	return u.Bgn(reflect.ValueOf(list).Index(0).Len())
 }
 func In(i int, list interface{}) bool {
-	k := reflect.ValueOf(list).Index(1).Len()
-	return I(i, k)
+	return u.I(i, reflect.ValueOf(list).Index(1).Len())
 }
 func Next(i int, list interface{}) int {
-	j := reflect.ValueOf(list).Index(0).Len()
-	return Nxt(i, j)
+	return u.Nxt(i, reflect.ValueOf(list).Index(0).Len())
+}
+func Off(i int) int {
+	return u.Off(i)
+}
+func Pos(i int) int {
+	return u.Pos(i)
+}
+func Break(list interface{}) int {
+	return u.Brk(reflect.ValueOf(list).Index(1).Len())
 }
