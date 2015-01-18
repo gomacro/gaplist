@@ -5,7 +5,7 @@
 package list_test
 
 import (
-	. "example.com/repo.git/gaplist/util"
+	. "example.com/repo.git/gaplist/util2"
 	"fmt"
 	"testing"
 )
@@ -78,28 +78,9 @@ func TestCustom0(t *testing.T) {
 
 */
 
-func Append(src [2][][]byte, a ...byte) [2][][]byte {
-	return AppendS(src, a)
-}
-func AppendS(src [2][][]byte, a []byte) (dst [2][][]byte) {
-	dst = src
-	dst[1] = append(dst[1], a)
-	return dst
-}
+/*
 
-func From(dst *[2][][]byte, src []byte) {
-	var d [2][][]byte
-	d[0] = append(d[0], src)
-	*dst = d
-}
 
-func Collapse(dst *[]byte, src [2][][]byte) {
-	for _, o := range src {
-		for _, p := range o {
-			*dst = append(*dst, p...)
-		}
-	}
-}
 func mkshort(i int) int {
 	if i > 0 {
 		return -1
@@ -132,31 +113,7 @@ func Slice(dst *[2][][]byte, src [2][][]byte, i, p, j, q int) {
 	}
 }
 
-func TestCustom0(t *testing.T) {
-	var list [2][][]byte
 
-	list[0] = [][]byte{{1, 1, 1, 1, 1, 7, 1, 1, 1, 7, 1, 1, 7, 1, 1}}
-	list[1] = [][]byte{{1, 1, 1, 1, 1, 7, 1, 1, 1, 7, 1, 1, 7, 1, 1}}
-
-	for i := Bgn(len(list[0])); Tst(i, len(list[1])); i = Nxt(i, len(list[0]), len(list[1])) {
-
-	}
-
-	//	fmt.Println(list)
-	list = AppendS(list, []byte{1, 3, 3, 7})
-	list = Append(list, 2, 4, 4, 8)
-
-	//	fmt.Println(list)
-
-	var lst []byte
-
-	Collapse(&lst, list)
-
-	//	fmt.Println(lst)
-
-	From(&list, lst)
-	//	fmt.Println(list)
-}
 
 func TestSlice0(t *testing.T) {
 	var list, list1, list2, list3, list01, list02, list03 [2][][]byte
@@ -217,6 +174,56 @@ func TestSlice0(t *testing.T) {
 	if fmt.Sprintln(list) != origlist {
 		t.Errorf("Damaged list - side effect")
 	}
+}
+
+
+*/
+
+func Append(src [2][][]byte, a ...byte) [2][][]byte {
+	return AppendS(src, a)
+}
+func AppendS(src [2][][]byte, a []byte) (dst [2][][]byte) {
+	dst = src
+	dst[1] = append(dst[1], a)
+	return dst
+}
+func From(dst *[2][][]byte, src []byte) {
+	var d [2][][]byte
+	d[0] = append(d[0], src)
+	*dst = d
+}
+
+func Collapse(dst *[]byte, src [2][][]byte) {
+	for _, o := range src {
+		for _, p := range o {
+			*dst = append(*dst, p...)
+		}
+	}
+}
+func TestCustom0(t *testing.T) {
+	var list [2][][]byte
+
+	list[0] = [][]byte{{1, 1, 1, 1, 1, 7, 1, 1, 1, 7, 1, 1, 7, 1, 1}}
+	list[1] = [][]byte{{1, 1, 1, 1, 1, 7, 1, 1, 1, 7, 1, 1, 7, 1, 1}}
+
+	for i := Bgn(len(list[0])); Tst(i, len(list[1])); i = Nxt(i, len(list[0])) {
+
+	}
+
+	fmt.Println(list)
+	list = AppendS(list, []byte{1, 3, 3, 7})
+	list = Append(list, 2, 4, 4, 8)
+
+	fmt.Println(list)
+
+	var lst []byte
+
+	Collapse(&lst, list)
+
+	fmt.Println(lst)
+
+	From(&list, lst)
+	fmt.Println(list)
 }
 
 /*
