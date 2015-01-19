@@ -200,13 +200,12 @@ func (U64) Collapse(dst *[]uint64, src [2][][]uint64) {
 }
 
 // byte specific
-func Append(src [2][][]byte, a ...byte) [2][][]byte {
-	return AppendS(src, a)
+func Append(dst *[2][][]byte, src [2][][]byte, a ...byte) {
+	AppendS(dst, src, a)
 }
-func AppendS(src [2][][]byte, a []byte) (dst [2][][]byte) {
-	dst = src
-	dst[1] = append(dst[1], a)
-	return dst
+func AppendS(dst *[2][][]byte, src [2][][]byte, a []byte) {
+	*dst = src
+	(*dst)[1] = append((*dst)[1], a)
 }
 func From(dst *[2][][]byte, src []byte) {
 	var d [2][][]byte
@@ -232,20 +231,53 @@ func Gap(dst *[2][][]byte, src [2][][]byte, at int) {
 	}
 }
 
-// Drop the n-th element
-func Drop(dst *[2][][]byte, src [2][][]byte, n int) {
-	if n != 0 {
-		(*dst)[0] = append(src[0], src[1][0][:n])
+// Remove the pos-th element
+func Remove(dst *[2][][]byte, src [2][][]byte, pos int) {
+	if pos != 0 {
+		(*dst)[0] = append(src[0], src[1][0][:pos])
 	} else {
 		(*dst)[0] = src[0]
 	}
-	if n == len(src[1][0])-1 {
+	if pos == len(src[1][0])-1 {
 		(*dst)[1] = src[1]
 		(*dst)[1] = src[1][1:]
 	} else {
 		(*dst)[1] = src[1]
-		(*dst)[1][0] = src[1][0][n+1:]
+		(*dst)[1][0] = src[1][0][pos+1:]
 	}
+}
+
+func Empty(list [2][][]byte) bool {
+	return len(list[0])+len(list[1]) == 0
+}
+
+func Len(list [2][][]byte) (l int) {
+	for _, i := range list {
+		for _, j := range i {
+			l += len(j)
+		}
+	}
+	return l
+}
+
+// delete n list items relative to the position pos
+func Delete(dst *[2][][]byte, src [2][][]byte, pos, n int) {
+	if n == 0 {
+		(*dst) = src
+		return
+	}
+	if pos != 0 {
+		(*dst)[1][0] = src[1][0][pos:]
+		(*dst)[0] = append(src[0], src[1][0][:pos])
+	} else {
+		(*dst)[1] = src[1]
+		(*dst)[0] = src[0]
+	}
+	for n > len((*dst)[1][0]) {
+		n -= len((*dst)[1][0])
+		(*dst)[1] = (*dst)[1][1:]
+	}
+	(*dst)[1][0] = (*dst)[1][0][n:]
 }
 
 /////////////
@@ -256,8 +288,8 @@ func TestCustom0(t *testing.T) {
 	list[1] = [][]byte{{1, 1, 1, 1, 1, 7, 1, 1, 1, 7, 1, 1, 7, 1, 1}}
 
 	fmt.Println(list)
-	list = AppendS(list, []byte{1, 3, 3, 7})
-	list = Append(list, 2, 4, 4, 8)
+	AppendS(&list, list, []byte{1, 3, 3, 7})
+	Append(&list, list, 2, 4, 4, 8)
 
 	fmt.Println(list)
 
@@ -332,7 +364,7 @@ func TestMvGap0(t *testing.T) {
 		t.Fatalf("list=", list)
 	}
 
-	Drop(&list, list, 1)
+	Remove(&list, list, 1)
 	if chsum2(fmt.Sprintln(list)) != 1612022053 {
 		t.Fatalf("list=", list)
 	}
@@ -340,14 +372,30 @@ func TestMvGap0(t *testing.T) {
 	if chsum2(fmt.Sprintln(list)) != 3907716837 {
 		t.Fatalf("list=", list)
 	}
-	Drop(&list, list, 0)
+	Remove(&list, list, 0)
 	if chsum2(fmt.Sprintln(list)) != 4037596601 {
 		t.Fatalf("list=", list)
 	}
-	Drop(&list, list, 1)
+	Remove(&list, list, 1)
 	if chsum2(fmt.Sprintln(list)) != 3208141135 {
 		t.Fatalf("list=", list)
 	}
+}
+
+func TestMvGapDel0(t *testing.T) {
+	list := [2][][]byte{{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}, {{10, 11, 12}, {13, 14, 15}, {16, 17, 18}}}
+
+	if chsum2(fmt.Sprintln(list)) != 4018479458 {
+		t.Fatalf("list=", list)
+	}
+
+	fmt.Println(list, Len(list), Empty(list))
+
+	Delete(&list, list, 0, 4)
+
+	fmt.Println(list, Len(list), Empty(list))
+	Delete(&list, list, 1, 2)
+	fmt.Println(list, Len(list), Empty(list))
 }
 
 /*
