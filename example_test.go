@@ -440,14 +440,17 @@ func TestMvGapDelLeft0(t *testing.T) {
 	if chsum2(fmt.Sprintln(list)) != 4018479458 {
 		t.Fatalf("list=%v", list)
 	}
-	fmt.Println(list, Len(list), Empty(list), chsum2(fmt.Sprintln(list)))
+
 	Delete(&list, list, 1, 9)
 
-	fmt.Println(list, Len(list), Empty(list), chsum2(fmt.Sprintln(list)))
-
+	if chsum2(fmt.Sprintln(list)) != 2813059801 {
+		t.Fatalf("list=%v", list)
+	}
 	InsertS(&list, list, 0, []byte{95, 96, 97, 98, 99})
+	if chsum2(fmt.Sprintln(list)) != 1634500943 {
+		t.Fatalf("list=%v", list)
+	}
 
-	fmt.Println(list, Len(list), Empty(list), chsum2(fmt.Sprintln(list)))
 }
 
 /*
