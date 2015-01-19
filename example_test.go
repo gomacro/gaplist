@@ -11,18 +11,6 @@ import (
 )
 
 /*
-func Append(list *[2][][]int, elem ... int) {
-	(*list)[1][0] = append((*list)[1][0], elem...)
-}
-*/
-
-/*
-func Prepend(list *[2][][]int, elem ... int) {
-	(*list)[0][0] = append(elem, (*list)[0][0]...)
-}
-*/
-
-/*
 func TestCustom0(t *testing.T) {
 	var list [2][][]byte
 
