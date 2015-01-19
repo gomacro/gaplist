@@ -221,6 +221,34 @@ func Collapse(dst *[]byte, src [2][][]byte) {
 		}
 	}
 }
+func Gap(dst *[2][][]byte, src [2][][]byte, at int) {
+	o := Off(at)
+	if at < 0 {
+		(*dst)[0] = src[0][:o]
+		(*dst)[1] = append(src[0][o:], src[1]...)
+	} else if at > 0 {
+		(*dst)[1] = src[1][o:]
+		(*dst)[0] = append(src[0], src[1][:o]...)
+	}
+}
+
+// Drop the n-th element
+func Drop(dst *[2][][]byte, src [2][][]byte, n int) {
+	if n != 0 {
+		(*dst)[0] = append(src[0], src[1][0][:n])
+	} else {
+		(*dst)[0] = src[0]
+	}
+	if n == len(src[1][0])-1 {
+		(*dst)[1] = src[1]
+		(*dst)[1] = src[1][1:]
+	} else {
+		(*dst)[1] = src[1]
+		(*dst)[1][0] = src[1][0][n+1:]
+	}
+}
+
+/////////////
 func TestCustom0(t *testing.T) {
 	var list [2][][]byte
 
@@ -241,6 +269,14 @@ func TestCustom0(t *testing.T) {
 
 	From(&list, lst)
 	fmt.Println(list)
+}
+func chsum2(str string) (o uint32) {
+	slice := []byte(str)
+	for _, c := range slice {
+		o += uint32(c)
+		o *= 31
+	}
+	return o
 }
 func chsum(str string) (o uint32) {
 	slice := []byte(str)
@@ -276,6 +312,41 @@ func TestFib0(t *testing.T) {
 
 	if 4147915120 != chsum(fmt.Sprintln(lst)) {
 		t.Fatalf("Bad list sum: %v", lst)
+	}
+}
+
+func TestMvGap0(t *testing.T) {
+	list := [2][][]byte{{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}, {{10, 11, 12}, {13, 14, 15}, {16, 17, 18}}}
+
+	if chsum2(fmt.Sprintln(list)) != 4018479458 {
+		t.Fatalf("list=", list)
+	}
+
+	Gap(&list, list, -2)
+	if chsum2(fmt.Sprintln(list)) != 2501548834 {
+		t.Fatalf("list=", list)
+	}
+
+	Gap(&list, list, 3)
+	if chsum2(fmt.Sprintln(list)) != 3469224306 {
+		t.Fatalf("list=", list)
+	}
+
+	Drop(&list, list, 1)
+	if chsum2(fmt.Sprintln(list)) != 1612022053 {
+		t.Fatalf("list=", list)
+	}
+	Gap(&list, list, -2)
+	if chsum2(fmt.Sprintln(list)) != 3907716837 {
+		t.Fatalf("list=", list)
+	}
+	Drop(&list, list, 0)
+	if chsum2(fmt.Sprintln(list)) != 4037596601 {
+		t.Fatalf("list=", list)
+	}
+	Drop(&list, list, 1)
+	if chsum2(fmt.Sprintln(list)) != 3208141135 {
+		t.Fatalf("list=", list)
 	}
 }
 

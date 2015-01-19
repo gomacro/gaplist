@@ -49,4 +49,4 @@ func I(i, k int) bool {
 }
 
 // Brk is used to break the list loop, using a huge positive constant
-const Brk = int((^uint(0) >> 1)-1)
+const Brk = int((^uint(0) >> 1) - 1)
