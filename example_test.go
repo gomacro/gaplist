@@ -262,11 +262,11 @@ func Len(list [2][][]byte) (l int) {
 
 // delete n list items relative to the position pos
 func Delete(dst *[2][][]byte, src [2][][]byte, pos, n int) {
-	if n == 0 {
-		(*dst) = src
-		return
-	}
-	if n < 0 {
+	if n <= 0 {
+		if n == 0 {
+			(*dst) = src
+			return
+		}
 		n = -n
 
 		if pos != 0 {
@@ -301,6 +301,17 @@ func Delete(dst *[2][][]byte, src [2][][]byte, pos, n int) {
 
 	(*dst)[0][len((*dst)[0])-1] = (*dst)[0][len((*dst)[0])-1][:len((*dst)[0][len((*dst)[0])-1])-n]
 
+}
+func Insert(dst *[2][][]byte, src [2][][]byte, pos int, items ...byte) {
+	InsertS(dst, src, pos, items)
+}
+
+// insert list items relative to the position pos, to left
+func InsertS(dst *[2][][]byte, src [2][][]byte, pos int, items []byte) {
+	if pos == 0 {
+		(*dst)[1] = src[1]
+		(*dst)[0] = append(src[0], items)
+	}
 }
 
 /////////////
@@ -431,6 +442,10 @@ func TestMvGapDelLeft0(t *testing.T) {
 	}
 	fmt.Println(list, Len(list), Empty(list), chsum2(fmt.Sprintln(list)))
 	Delete(&list, list, 1, 9)
+
+	fmt.Println(list, Len(list), Empty(list), chsum2(fmt.Sprintln(list)))
+
+	InsertS(&list, list, 0, []byte{95, 96, 97, 98, 99})
 
 	fmt.Println(list, Len(list), Empty(list), chsum2(fmt.Sprintln(list)))
 }
