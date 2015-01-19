@@ -66,16 +66,24 @@ func TestCustom0(t *testing.T) {
 
 */
 
-/*
-
-
 func mkshort(i int) int {
 	if i > 0 {
 		return -1
 	}
 	return 0
 }
+
+func fixint(i int) int {
+	return -(i + 1)
+
+}
+
 func Slice(dst *[2][][]byte, src [2][][]byte, i, p, j, q int) {
+
+	sliceOld(dst, src, fixint(i), p, fixint(j), q)
+}
+
+func sliceOld(dst *[2][][]byte, src [2][][]byte, i, p, j, q int) {
 	if i < 0 {
 		fmt.Println("aa")
 		n := len(src[1])
@@ -101,8 +109,6 @@ func Slice(dst *[2][][]byte, src [2][][]byte, i, p, j, q int) {
 	}
 }
 
-
-
 func TestSlice0(t *testing.T) {
 	var list, list1, list2, list3, list01, list02, list03 [2][][]byte
 
@@ -115,7 +121,7 @@ func TestSlice0(t *testing.T) {
 	c2 := "[[[7 8] [9 10 11] [12]] []]\n"
 	c3 := "[[] [[19] [20 21]]]\n"
 
-	Slice(&list1, list, 1, 3, -2, 1)
+	Slice(&list1, list, -2, 3, 1, 1)
 	if fmt.Sprintln(list1) != c1 {
 		t.Errorf("Bad list - output 1")
 	}
@@ -123,7 +129,7 @@ func TestSlice0(t *testing.T) {
 		t.Errorf("Damaged list - side effect 1")
 	}
 
-	Slice(&list2, list, 1, 3, 3, 1)
+	Slice(&list2, list, -2, 3, -4, 1)
 	if fmt.Sprintln(list2) != c2 {
 		t.Errorf("Bad list - output 2")
 	}
@@ -131,7 +137,7 @@ func TestSlice0(t *testing.T) {
 		t.Errorf("Damaged list - side effect 2")
 	}
 
-	Slice(&list3, list, -2, 1, -3, 2)
+	Slice(&list3, list, 1, 1, 2, 2)
 	if fmt.Sprintln(list3) != c3 {
 		t.Errorf("Bad list - output 3")
 	}
@@ -141,7 +147,7 @@ func TestSlice0(t *testing.T) {
 
 	fmt.Println("-----------------------------------------------")
 
-	Slice(&list01, list, 1, 0, -2, 0)
+	Slice(&list01, list, -2, 0, 1, 0)
 	fmt.Println(list01)
 	if fmt.Sprintln(list) != origlist {
 		t.Errorf("Damaged list - side effect")
@@ -149,7 +155,7 @@ func TestSlice0(t *testing.T) {
 
 	fmt.Println("----------------")
 
-	Slice(&list02, list, 1, 0, 3, 0)
+	Slice(&list02, list, -2, 0, -4, 0)
 	fmt.Println(list02)
 	if fmt.Sprintln(list) != origlist {
 		t.Errorf("Damaged list - side effect")
@@ -157,15 +163,12 @@ func TestSlice0(t *testing.T) {
 
 	fmt.Println("----------------")
 
-	Slice(&list03, list, -2, 0, -3, 0)
+	Slice(&list03, list, 1, 0, 2, 0)
 	fmt.Println(list03)
 	if fmt.Sprintln(list) != origlist {
 		t.Errorf("Damaged list - side effect")
 	}
 }
-
-
-*/
 
 // U64-specific
 
