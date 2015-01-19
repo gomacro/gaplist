@@ -266,6 +266,26 @@ func Delete(dst *[2][][]byte, src [2][][]byte, pos, n int) {
 		(*dst) = src
 		return
 	}
+	if n < 0 {
+		n = -n
+		if pos == 0 {
+			(*dst)[1] = src[1]
+			(*dst)[0] = src[0]
+
+			for n >= len((*dst)[0][len((*dst)[0])-1]) {
+				n -= len((*dst)[0][len((*dst)[0])-1])
+				(*dst)[0] = (*dst)[0][:len((*dst)[0])-1]
+				fmt.Println(*dst)
+
+			}
+
+			(*dst)[0][len((*dst)[0])-1] = (*dst)[0][len((*dst)[0])-1][:len((*dst)[0][len((*dst)[0])-1])-n]
+			fmt.Println(*dst)
+		}
+
+		return
+	}
+
 	if pos != 0 {
 		(*dst)[1][0] = src[1][0][pos:]
 		(*dst)[0] = append(src[0], src[1][0][:pos])
@@ -273,7 +293,7 @@ func Delete(dst *[2][][]byte, src [2][][]byte, pos, n int) {
 		(*dst)[1] = src[1]
 		(*dst)[0] = src[0]
 	}
-	for n > len((*dst)[1][0]) {
+	for n >= len((*dst)[1][0]) {
 		n -= len((*dst)[1][0])
 		(*dst)[1] = (*dst)[1][1:]
 	}
@@ -398,6 +418,16 @@ func TestMvGapDel0(t *testing.T) {
 	if chsum2(fmt.Sprintln(list)) != 1284416616 {
 		t.Fatalf("list=", list)
 	}
+
+}
+
+func TestMvGapDelLeft0(t *testing.T) {
+	list := [2][][]byte{{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}, {{10, 11, 12}, {13, 14, 15}, {16, 17, 18}}}
+	if chsum2(fmt.Sprintln(list)) != 4018479458 {
+		t.Fatalf("list=", list)
+	}
+	fmt.Println(list, Len(list), Empty(list), chsum2(fmt.Sprintln(list)))
+	Delete(&list, list, 0, -6)
 
 	fmt.Println(list, Len(list), Empty(list), chsum2(fmt.Sprintln(list)))
 }
