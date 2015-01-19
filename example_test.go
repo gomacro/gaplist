@@ -312,6 +312,11 @@ func InsertS(dst *[2][][]byte, src [2][][]byte, pos int, items []byte) {
 		(*dst)[1] = src[1]
 		(*dst)[0] = append(src[0], items)
 	}
+	if pos != 0 {
+		(*dst)[1] = src[1]
+		(*dst)[0] = append(src[0], (*dst)[1][0][:pos], items)
+		(*dst)[1][0] = (*dst)[1][0][pos:]
+	}
 }
 
 /////////////
@@ -451,8 +456,14 @@ func TestMvGapDelLeft0(t *testing.T) {
 		t.Fatalf("list=%v", list)
 	}
 
+	InsertS(&list, list, 1, []byte{85, 86, 87, 88, 89})
+
+	if chsum2(fmt.Sprintln(list)) != 2704179054 {
+		t.Fatalf("list=%v", list)
+	}
 }
 
+//	fmt.Println(list, Len(list), Empty(list), chsum2(fmt.Sprintln(list)))
 /*
 func Example() {
 	var list [2][][]int
