@@ -389,13 +389,17 @@ func TestMvGapDel0(t *testing.T) {
 		t.Fatalf("list=", list)
 	}
 
-	fmt.Println(list, Len(list), Empty(list))
-
 	Delete(&list, list, 0, 4)
+	if chsum2(fmt.Sprintln(list)) != 3798428136 {
+		t.Fatalf("list=", list)
+	}
 
-	fmt.Println(list, Len(list), Empty(list))
 	Delete(&list, list, 1, 2)
-	fmt.Println(list, Len(list), Empty(list))
+	if chsum2(fmt.Sprintln(list)) != 1284416616 {
+		t.Fatalf("list=", list)
+	}
+
+	fmt.Println(list, Len(list), Empty(list), chsum2(fmt.Sprintln(list)))
 }
 
 /*
