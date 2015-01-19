@@ -284,21 +284,23 @@ func Delete(dst *[2][][]byte, src [2][][]byte, pos, n int) {
 		return
 
 	}
+	(*dst)[1] = src[1]
+	(*dst)[0] = src[0]
+	if pos != 0 {
+		(*dst)[1][0] = (*dst)[1][0][pos:]
+		n -= pos
+		pos = 0
 
-	if pos == 0 {
-		(*dst)[1] = src[1]
-		(*dst)[0] = src[0]
-
-		for n >= len((*dst)[0][len((*dst)[0])-1]) {
-			n -= len((*dst)[0][len((*dst)[0])-1])
-			(*dst)[0] = (*dst)[0][:len((*dst)[0])-1]
-			fmt.Println(*dst)
-
-		}
-
-		(*dst)[0][len((*dst)[0])-1] = (*dst)[0][len((*dst)[0])-1][:len((*dst)[0][len((*dst)[0])-1])-n]
-		fmt.Println(*dst)
 	}
+
+	for n >= len((*dst)[0][len((*dst)[0])-1]) {
+		n -= len((*dst)[0][len((*dst)[0])-1])
+		(*dst)[0] = (*dst)[0][:len((*dst)[0])-1]
+
+	}
+
+	(*dst)[0][len((*dst)[0])-1] = (*dst)[0][len((*dst)[0])-1][:len((*dst)[0][len((*dst)[0])-1])-n]
+
 }
 
 /////////////
@@ -428,7 +430,7 @@ func TestMvGapDelLeft0(t *testing.T) {
 		t.Fatalf("list=%v", list)
 	}
 	fmt.Println(list, Len(list), Empty(list), chsum2(fmt.Sprintln(list)))
-	Delete(&list, list, 1, 6)
+	Delete(&list, list, 1, 9)
 
 	fmt.Println(list, Len(list), Empty(list), chsum2(fmt.Sprintln(list)))
 }
