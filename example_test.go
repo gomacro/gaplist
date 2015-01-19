@@ -85,7 +85,6 @@ func Slice(dst *[2][][]byte, src [2][][]byte, i, p, j, q int) {
 
 func sliceOld(dst *[2][][]byte, src [2][][]byte, i, p, j, q int) {
 	if i < 0 {
-		fmt.Println("aa")
 		n := len(src[1])
 		(*dst)[1] = append((*dst)[1], src[1][j-1+n:i+n]...)
 		l := len((*dst)[1]) - 1
@@ -93,14 +92,12 @@ func sliceOld(dst *[2][][]byte, src [2][][]byte, i, p, j, q int) {
 		(*dst)[1][l] = (*dst)[1][l][:q]
 		(*dst)[1][0] = (*dst)[1][0][p:]
 	} else if j >= 0 {
-		fmt.Println("bb")
 		(*dst)[0] = append((*dst)[0], src[0][i:j+1]...)
 		(*dst)[1] = [][]byte{}
 		l := len((*dst)[0]) - 1
 		(*dst)[0][l] = (*dst)[0][l][:q]
 		(*dst)[0][0] = (*dst)[0][0][p:]
 	} else {
-		fmt.Println("cc")
 		(*dst)[0] = append((*dst)[0], src[0][i:]...)
 		(*dst)[0][0] = (*dst)[0][0][p:]
 		(*dst)[1] = append((*dst)[1], src[1][:j-1+len(src[1])]...)
@@ -455,33 +452,35 @@ func TestMvGapDelLeft0(t *testing.T) {
 }
 
 //	fmt.Println(list, Len(list), Empty(list), chsum2(fmt.Sprintln(list)))
-/*
-func Example() {
-	var list [2][][]int
+
+func TestListExample0(t *testing.T) {
+	var list [2][][]byte
 
 	fmt.Println("hello")
 
-	Append(&list, 1, 3, 3, 7)
-	Prepend(&list, 8, 2, 2, 6)
-
-
 	// Create a new list and put some numbers in it.
-//	l := list.New()
-//	e4 := l.PushBack(4)
-//	e1 := l.PushFront(1)
-//	l.InsertBefore(3, e4)
-//	l.InsertAfter(2, e1)
+	//	l := list.New()
+	//	e4 := l.PushBack(4)
+	//	e1 := l.PushFront(1)
+	Append(&list, list, 4)
+	Insert(&list, list, 0, 1)
 
-	fmt.Println(list)
+	//	l.InsertBefore(3, e4)
+	//	l.InsertAfter(2, e1)
 
-	for i := Bgn(len(list[0])); Tst(i, len(list[1])); i = Nxt(i, len(list[0]), len(list[1])) {
-		fmt.Println(list[Neg(i)][Off(i, len(list[1]))])
-	}
+	Insert(&list, list, 0, 2)
+	Insert(&list, list, 0, 3)
 
 	// Iterate through list and print its contents.
-//	for e := l.Front(); e != nil; e = e.Next() {
-//		fmt.Println(e.Value)
-//	}
+	//	for e := l.Front(); e != nil; e = e.Next() {
+	//		fmt.Println(e.Value)
+	//	}
+
+	for li := Begin(list); In(li, list); li = Next(li, list) {
+		for _, evalue := range list[Pos(li)][Off(li)] {
+			fmt.Println(evalue)
+		}
+	}
 
 	// Output:
 	// 1
@@ -489,4 +488,3 @@ func Example() {
 	// 3
 	// 4
 }
-*/
